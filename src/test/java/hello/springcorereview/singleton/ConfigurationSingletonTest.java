@@ -39,7 +39,7 @@ class ConfigurationSingletonTest {
      * if(이미 스프링 컨테이너에 등록되어 있으면) -> 스프링 빈에서 컨테이너에서 찾아서 반환
      * else -> 새로 생성하고 스프링 컨테이너에 등록한 후 반환
 
-     * @ Configuration 을 적용하지 않고 @Bean 만 적용할 경우
+     * @Configuration 을 적용하지 않고 @Bean 만 적용할 경우
      * 스프링 빈으로 등록되지만, 싱글톤이 보장되지 않는다.
      */
     @Test
