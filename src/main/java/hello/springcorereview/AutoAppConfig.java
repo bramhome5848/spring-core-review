@@ -21,7 +21,7 @@ import org.springframework.context.annotation.FilterType;
  */
 @Configuration
 @ComponentScan(
-        basePackages = "hello.springcorereview.member",
+        //basePackages = "hello.springcorereview.member",   //범위 잘 확인할 것..ㅜㅠ
         excludeFilters = @Filter(type = FilterType.ANNOTATION, classes = Configuration.class))
 public class AutoAppConfig {
 }

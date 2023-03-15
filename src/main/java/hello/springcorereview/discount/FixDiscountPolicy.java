@@ -2,7 +2,10 @@ package hello.springcorereview.discount;
 
 import hello.springcorereview.member.Grade;
 import hello.springcorereview.member.Member;
+import org.springframework.stereotype.Component;
 
+@Component
+//@Qualifier("fixDiscountPolicy")
 public class FixDiscountPolicy implements DiscountPolicy {
 
     private final int discountFixAmount = 1000;   //1000원 할인

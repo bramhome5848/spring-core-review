@@ -1,5 +1,6 @@
 package hello.springcorereview.order;
 
+import hello.springcorereview.annotation.MainDiscountPolicy;
 import hello.springcorereview.discount.DiscountPolicy;
 import hello.springcorereview.member.Member;
 import hello.springcorereview.member.MemberRepository;
@@ -7,9 +8,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+//@RequiredArgsConstructor    // field field 에 대한 생성자를 만들어 준다 (cmd + f12 로 확인가능), 코드도 간결해지고 field 추가도 편하다.
 public class OrderServiceImpl implements OrderService {
 
     private final MemberRepository memberRepository;
+
+    /**
+     * @Autowired는 타입으로 조회하기 때문에 빈이 2개 이상일 때 문제가 발생할 수 있다.
+     * @Autowired는 타입 매칭을 시도하고, 이 때 여러 빈이 존재할 경우 필드 이름(파라미터 이름)으로 빈 이름을 추가 매칭한다.
+     * DiscountPolicy 의 하위 타입 FixDiscountPolicy, RateDiscountPolicy -> NoUniqueBeanDefinitionException
+     * 하위 타입으로 직접 지정하지 않고 해결할 수 있는 방법
+     * 1. @Autowired 필드명 매칭 -> 필드명을 빈 이름으로 변경, 파라미터명을 빈 이름으로 변경(생성자 직접 사용의 경우)
+     * 2. @Qualifier -> 구분자를 붙여주는 방식, 주입시 추가적인 방법을 제공하는 것이지 빈 이름을 변경하는 것은 아니다.
+     * @Qualifier("mainDiscountPolicy") 를 못찾으면 -> mainDiscountPolicy 라는 이름의 스프링 빈을 추가로 찾는다.
+     * @Bean 직접 등록시에도 @Qualifier 를 동일하게 사용할 수 있다.
+     * @Qualifier 는 명확하게 @Qualifier 끼리 사용하는 것이 가장 좋다.
+     * 3. @Primary -> 우선순위를 정하는 방법으로 여러 빈 매칭되면 @Primary 가 우선권을 가지도록 함
+     * @Qualifier 처럼 주입시에 @Qualifier 를 붙여줄 필요가 없이 편하게 사용 가능
+     * 우선 순위
+     * @Primary 는 기본값 처럼 동작하는 것, @Qualifier 는 매우 상세하게 동작
+     * 스프링은 자동보다는 수동, 넓은 범위보다는 좁은 범위의 선택권이 우선순위가 높다. @Primary < @Qualifier
+     */
     private final DiscountPolicy discountPolicy;
 
     /**
@@ -32,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
      * 생성자 주입은 객체를 생성할 때 딱 1번만 호출되므로 이후에 호출되는 일이 없어 불변하게 설계할 수 있다.
      */
     @Autowired
-    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+    public OrderServiceImpl(MemberRepository memberRepository, @MainDiscountPolicy DiscountPolicy discountPolicy) {
         this.memberRepository = memberRepository;
         this.discountPolicy = discountPolicy;
     }
